@@ -403,6 +403,8 @@ namespace BlockEnhancementMod
         string GroupFireRate { get; }
         string AutoGrabberRelease { get; }
         string SearchMode { get; }
+        string MasterSlaveMode { get; }
+        string MasterGroup { get; }
         string DefaultAuto { get; }
         string DefaultManual { get; }
         string ZoomControlMode { get; }
@@ -449,6 +451,10 @@ namespace BlockEnhancementMod
         string PauseTracking { get; }
 
         string SinglePlayerTeam { get; }
+
+        string Master { get; }
+
+        string Slave { get; }
 
         //CV Joint
         string CvJoint { get; }
@@ -579,6 +585,10 @@ namespace BlockEnhancementMod
 
         public string SearchMode { get; } = "搜索模式";
 
+        public string MasterSlaveMode { get; } = "主动被动模式";
+
+        public string MasterGroup { get; } = "主从组";
+
         public string DefaultAuto { get; } = "默认自动搜索";
 
         public string DefaultManual { get; } = "默认手动搜索";
@@ -626,6 +636,10 @@ namespace BlockEnhancementMod
         public string PauseTracking { get; } = "暂停/恢复追踪";
 
         public string SinglePlayerTeam { get; } = "单人模式队伍";
+
+        public string Master { get; } = "主动制导";
+
+        public string Slave { get; } = "被动制导";
 
         //CV Joint
         public string CvJoint { get; } = "万向节";
@@ -756,9 +770,13 @@ namespace BlockEnhancementMod
 
         public string SearchMode { get; } = "Search Mode";
 
-        public string DefaultAuto { get; } = "Default " + Environment.NewLine + "Auto Search";
+        public string MasterSlaveMode { get; } = "Master/Slave Mode";
 
-        public string DefaultManual { get; } = "Default " + Environment.NewLine + " Manual Search";
+        public string MasterGroup { get; } = "Master/Slave" + Environment.NewLine + "Group";
+
+        public string DefaultAuto { get; } = "Default" + Environment.NewLine + "Auto Search";
+
+        public string DefaultManual { get; } = "Default" + Environment.NewLine + " Manual Search";
 
         public string ZoomControlMode { get; } = "Zoom Contorol";
 
@@ -803,6 +821,10 @@ namespace BlockEnhancementMod
         public string PauseTracking { get; } = "Pause/Resume" + Environment.NewLine + "Tracking";
 
         public string SinglePlayerTeam { get; } = "Single Player" + Environment.NewLine + "Team";
+
+        public string Master { get; } = "Master";
+
+        public string Slave { get; } = "Slave";
 
         //CV Joint
         public string CvJoint { get; } = "Universal Joint";
@@ -933,6 +955,10 @@ namespace BlockEnhancementMod
 
         public string SearchMode { get; } = "ロックオンモード";
 
+        public string MasterSlaveMode { get; } = "Master/Slave Mode";
+
+        public string MasterGroup { get; } = "Master/Slave Group";
+
         public string DefaultAuto { get; } = "デフォルト " + Environment.NewLine + "自動ロックオン";
 
         public string DefaultManual { get; } = "デフォルト " + Environment.NewLine + " 手動ロックオン";
@@ -980,6 +1006,10 @@ namespace BlockEnhancementMod
         public string PauseTracking { get; } = "注視の" + Environment.NewLine + "停止/再開";
 
         public string SinglePlayerTeam { get; } = "Single Player" + Environment.NewLine + "Team";
+
+        public string Master { get; } = "Master";
+
+        public string Slave { get; } = "Slave";
 
         //CV Joint
         public string CvJoint { get; } = "ﾕﾆﾊﾞｰｻﾙｼﾞｮｲﾝﾄ";

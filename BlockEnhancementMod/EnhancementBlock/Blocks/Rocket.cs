@@ -49,8 +49,12 @@ namespace BlockEnhancementMod
         MSlider ActiveGuideRocketSearchAngleSlider;
         MKey SwitchGuideModeKey;
         public MKey SPTeamKey;
+        public MKey MasterGroupKey;
         MMenu DefaultSearchModeMenu;
+        MMenu MasterSlaveModeMenu;
         private int searchModeIndex = 0;
+        public int masterSlaveModeIndex = 0;
+        public List<string> masterSlaveMode = new List<string>() { LanguageManager.Instance.CurrentLanguage.Master, LanguageManager.Instance.CurrentLanguage.Slave };
         public List<string> searchMode = new List<string>() { LanguageManager.Instance.CurrentLanguage.DefaultAuto, LanguageManager.Instance.CurrentLanguage.DefaultManual };
         //public List<KeyCode> switchGuideModeKey = new List<KeyCode> { KeyCode.RightShift };
         //public List<KeyCode> singlePlayerTeamKey = new List<KeyCode> { KeyCode.None };
@@ -102,6 +106,7 @@ namespace BlockEnhancementMod
             {
                 guidedRocketActivated =
                 DefaultSearchModeMenu.DisplayInMapper =
+                MasterSlaveModeMenu.DisplayInMapper =
                 GuidedRocketTorqueSlider.DisplayInMapper =
                 GuidePredictionSlider.DisplayInMapper =
                 GuidedRocketShowRadar.DisplayInMapper =
@@ -110,6 +115,7 @@ namespace BlockEnhancementMod
                 LockTargetKey.DisplayInMapper =
                 SwitchGuideModeKey.DisplayInMapper =
                 SPTeamKey.DisplayInMapper =
+                MasterGroupKey.DisplayInMapper =
                 ActiveGuideRocketSearchAngleSlider.DisplayInMapper =
                 GuideDelaySlider.DisplayInMapper =
                 GuidedRocketStabilityToggle.DisplayInMapper =
@@ -122,6 +128,13 @@ namespace BlockEnhancementMod
             DefaultSearchModeMenu.ValueChanged += (int value) =>
             {
                 searchModeIndex = value;
+                ChangedProperties();
+            };
+
+            MasterSlaveModeMenu = BB.AddMenu(LanguageManager.Instance.CurrentLanguage.MasterSlaveMode, masterSlaveModeIndex, masterSlaveMode, false);
+            MasterSlaveModeMenu.ValueChanged += (int value) =>
+            {
+                masterSlaveModeIndex = value;
                 ChangedProperties();
             };
 
@@ -202,6 +215,9 @@ namespace BlockEnhancementMod
             SPTeamKey = BB.AddKey(LanguageManager.Instance.CurrentLanguage.SinglePlayerTeam, "SinglePlayerTeam", KeyCode.None);
             SPTeamKey.InvokeKeysChanged();
 
+            MasterGroupKey = BB.AddKey(LanguageManager.Instance.CurrentLanguage.MasterGroup, "MasterGroup", KeyCode.None);
+            MasterGroupKey.InvokeKeysChanged();
+
             //Add reference to TimedRocket
             rocket = gameObject.GetComponent<TimedRocket>();
             rocketRigidbody = gameObject.GetComponent<Rigidbody>();
@@ -222,6 +238,9 @@ namespace BlockEnhancementMod
             AutoGrabberReleaseToggle.DisplayInMapper = value;
             SwitchGuideModeKey.DisplayInMapper = value && guidedRocketActivated;
             SPTeamKey.DisplayInMapper = value && guidedRocketActivated && (!StatMaster.isMP || Playerlist.Players.Count == 1);
+            DefaultSearchModeMenu.DisplayInMapper = value && guidedRocketActivated;
+            MasterSlaveModeMenu.DisplayInMapper = value && guidedRocketActivated;
+            MasterGroupKey.DisplayInMapper = value && guidedRocketActivated;
             DefaultSearchModeMenu.DisplayInMapper = value && guidedRocketActivated;
             ActiveGuideRocketSearchAngleSlider.DisplayInMapper = value && guidedRocketActivated;
             GuidePredictionSlider.DisplayInMapper = value && guidedRocketActivated;
@@ -299,7 +318,7 @@ namespace BlockEnhancementMod
                 radarObject.transform.localPosition = Vector3.forward * 0.5f;
                 radarObject.transform.localScale = Vector3.one;
                 radar = radarObject.GetComponent<RadarScript>() ?? radarObject.AddComponent<RadarScript>();
-                radar.Setup(BB, searchRange, searchAngle, searchModeIndex,guidedRocketShowRadar);
+                radar.Setup(BB, searchRange, searchAngle, searchModeIndex, masterSlaveModeIndex, guidedRocketShowRadar);
                 //radar.parentBlock = BB;
 
                 //Workaround when radar can be ignited hence explode the rocket
@@ -360,7 +379,7 @@ namespace BlockEnhancementMod
         {
             if (gameObject.activeInHierarchy)
             {
-     
+
 
                 if (GroupFireKey.IsHeld && !StatMaster.isClient)
                 {
@@ -403,14 +422,14 @@ namespace BlockEnhancementMod
                             //radar.SetTargetManual();
                         }
                     }
-                }           
+                }
 
                 if (rocket.hasFired)
                 {
                     //Activate Detection Zone
                     //if (!radar.Switch /*&& canTrigger*/) /*radar.Switch = true*/;
                     //if (radar.SearchMode == RadarScript.SearchModes.Auto && radar.target == null) radar.Switch = true;
-                   
+
 
                     //Activate aerodynamic effect
                     guideController.enableAerodynamicEffect = guidedRocketStabilityOn;
@@ -456,11 +475,11 @@ namespace BlockEnhancementMod
                             {
                                 //if (radar.target != null)
                                 //{
-                                    //if (radar.target.positionDiff.magnitude <= proximityRange+1f) StartCoroutine(RocketExplode());
-                                    if (radar.TargetDistance <= proximityRange + 1f)
-                                    {
-                                        StartCoroutine(RocketExplode());
-                                    }
+                                //if (radar.target.positionDiff.magnitude <= proximityRange+1f) StartCoroutine(RocketExplode());
+                                if (radar.TargetDistance <= proximityRange + 1f)
+                                {
+                                    StartCoroutine(RocketExplode());
+                                }
                                 //}
                             }
                         }

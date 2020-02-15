@@ -39,6 +39,7 @@ namespace BlockEnhancementMod
         public bool Switch { get; set; } = false;
         bool lastSwitchState = false;
         public SearchModes SearchMode { get; set; } = SearchModes.Auto;
+        public MasterSlaveMode masterSlaveMode { get; set; } = MasterSlaveMode.Master;
         public Target target { get; private set; }
 
         public event Action<Target> OnTarget;
@@ -54,6 +55,12 @@ namespace BlockEnhancementMod
         {
             Auto = 0,
             Manual = 1
+        }
+
+        public enum MasterSlaveMode
+        {
+            Master = 0,
+            Slave = 1
         }
 
         private void Awake()
@@ -217,7 +224,7 @@ namespace BlockEnhancementMod
             blockList.Clear();
         }
 
-        public void Setup(BlockBehaviour parentBlock, float searchRadius, float searchAngle, int searchMode, bool showRadar, float safetyRadius = 30f)
+        public void Setup(BlockBehaviour parentBlock, float searchRadius, float searchAngle, int searchMode, int masterSlaveMode, bool showRadar, float safetyRadius = 30f)
         {
             this.parentBlock = parentBlock;
             this.SearchAngle = searchAngle;
@@ -225,6 +232,7 @@ namespace BlockEnhancementMod
             this.SearchRadius = searchRadius;
             this.SafetyRadius = safetyRadius;
             this.SearchMode = (SearchModes)searchMode;
+            this.masterSlaveMode = (MasterSlaveMode)masterSlaveMode;
             CreateFrustumCone(safetyRadius, searchRadius);
             //targetList.Clear();
             blockList.Clear();
@@ -435,7 +443,7 @@ namespace BlockEnhancementMod
                     }
                     if (tempTarget == null)
                     {
-                        tempTarget =new Target(rayHit.point); /*Debug.Log("33- " + (tempTarget == null).ToString());*/
+                        tempTarget = new Target(rayHit.point); /*Debug.Log("33- " + (tempTarget == null).ToString());*/
                     }
 
                     return tempTarget;
